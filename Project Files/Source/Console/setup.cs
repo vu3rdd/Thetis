@@ -6114,7 +6114,7 @@ namespace Thetis
                 }
             }
 
-            if (console.CurrentHPSDRModel == HPSDRModel.HERMES || console.CurrentHPSDRModel == HPSDRModel.ANAN7000D || console.CurrentHPSDRModel == HPSDRModel.ANAN_G2)
+            if (console.CurrentHPSDRModel == HPSDRModel.HPSDR || console.CurrentHPSDRModel == HPSDRModel.HERMES || console.CurrentHPSDRModel == HPSDRModel.ANAN7000D || console.CurrentHPSDRModel == HPSDRModel.ANAN_G2)
             {
                 if (!tcGeneral.TabPages.Contains(tpApolloControl))
                 {
@@ -12238,19 +12238,164 @@ namespace Thetis
 
         private void chkPennyLane_CheckedChanged(object sender, System.EventArgs e)
         {
+            int bits = NetworkIO.GetC1Bits();
+            if (!chkPennyLane.Checked)
+            {
+                bits &= 0xdf;  // 11011111
+                //console.PennyLanePresent = false;
+                radPenny10MHz.Checked = false;
+                radPenny10MHz.Enabled = false;
+                radPennyMic.Checked = false;
+                radPennyMic.Enabled = false;
+                rad12288MHzPenny.Checked = false;
+                rad12288MHzPenny.Enabled = false;
+                grpPennyExtCtrl.Enabled = false;
+                chkPennyExtCtrl.Checked = false;
+                chkPennyExtCtrl.Enabled = false;
+                //NetworkIO.EnableHermesPower(0);
+            }
+            else
+            {
+                bits |= 0x20;   // 00100000
+
+                chkPennyPresent.Checked = false;
+                radPenny10MHz.Enabled = true;
+                radPennyMic.Enabled = true;
+                rad12288MHzPenny.Enabled = true;
+
+                chkPennyExtCtrl.Enabled = true;
+                if (chkPennyExtCtrl.Checked)
+                {
+                    grpPennyExtCtrl.Enabled = true;
+                }
+                console.PennyPresent = false;
+                //console.PennyLanePresent = true;
+                // chkGeneralRXOnly.Enabled = true;
+                // chkGeneralRXOnly.Enabled = false;
+
+                //NetworkIO.EnableHermesPower(1);
+            }
+            console.PennyLanePresent = chkPennyLane.Checked;
+            NetworkIO.SetC1Bits(bits);
+            checkHPSDRDefaults(sender, e);
+            NetworkIO.fwVersionsChecked = false;
         }
 
         private void chkPennyPresent_CheckedChanged(object sender, System.EventArgs e)
         {
+            int bits = NetworkIO.GetC1Bits();
+            if (!chkPennyPresent.Checked)
+            {
+                bits &= 0xdf;  // 11011111
+                //console.PennyPresent = false;
+                radPenny10MHz.Checked = false;
+                radPenny10MHz.Enabled = false;
+                radPennyMic.Checked = false;
+                radPennyMic.Enabled = false;
+                rad12288MHzPenny.Checked = false;
+                rad12288MHzPenny.Enabled = false;
+                grpPennyExtCtrl.Enabled = false;
+                chkPennyExtCtrl.Checked = false;
+                chkPennyExtCtrl.Enabled = false;
+                NetworkIO.SetPennyPresent(0);
+            }
+            else
+            {
+                chkPennyLane.Checked = false;
+                bits |= 0x20;   // 00100000
+
+                radPenny10MHz.Enabled = true;
+                radPennyMic.Enabled = true;
+                rad12288MHzPenny.Enabled = true;
+
+                chkPennyExtCtrl.Enabled = true;
+                if (chkPennyExtCtrl.Checked)
+                {
+                    grpPennyExtCtrl.Enabled = true;
+                }
+                //console.PennyPresent = true;
+                // chkGeneralRXOnly.Enabled = true;  
+                console.PennyLanePresent = false;
+
+                //JanusAudio.EnableHermesPower(0);
+                NetworkIO.SetPennyPresent(1);
+            }
+            console.PennyPresent = chkPennyPresent.Checked;
+            NetworkIO.SetC1Bits(bits);
+            checkHPSDRDefaults(sender, e);
+            NetworkIO.fwVersionsChecked = false;
         }
 
         private void checkHPSDRDefaults(object sender, System.EventArgs e)
         {
+            if (chkJanusPresent.Checked && !chkPennyPresent.Checked && !chkPennyLane.Checked)  // only janus - default mic to Janus 
+            {
+                radJanusMic.Checked = true;
+                radJanusMic_CheckedChanged(sender, e);
+            }
+            else if ((chkPennyPresent.Checked || chkPennyLane.Checked) && !chkJanusPresent.Checked)
+            {
+                radPennyMic.Checked = true;
+                radPennyMic_CheckedChanged(sender, e);
+            }
+
+            if ((chkPennyPresent.Checked || chkPennyLane.Checked) && !chkMercuryPresent.Checked)
+            {
+                rad12288MHzPenny.Checked = true;
+                rad12288MHzPenny_CheckedChanged(sender, e);
+            }
+            else if (chkMercuryPresent.Checked && !chkPennyPresent.Checked && !chkPennyLane.Checked)
+            {
+                radMercury12288MHz.Checked = true;
+                radMercury12288MHz_CheckedChanged(sender, e);
+            }
+
+            if (chkMercuryPresent.Checked && !radMercury10MHz.Checked && !radAtlas10MHz.Checked &&
+                !radPenny10MHz.Checked)
+            {
+                radMercury10MHz.Checked = true;
+                radMercury10MHz_CheckedChanged(sender, e);
+                radMercury12288MHz.Checked = true;
+                radMercury12288MHz_CheckedChanged(sender, e);
+            }
+
+            //if (!chkPennyPresent.Checked && !chkPennyLane.Checked)
+            //{
+            //    //chkGeneralRXOnly.Checked = true;
+            //    // chkGeneralRXOnly.Enabled = false;
+            //}
+            //else
+            //{
+            //    // chkGeneralRXOnly.Enabled = true;
+            //    //chkGeneralRXOnly.Checked = false;
+            //}
+            return;
         }
 
         private void chkMercuryPresent_CheckedChanged(object sender, System.EventArgs e)
         {
-            console.MercuryPresent = true;
+            int bits = NetworkIO.GetC1Bits();
+            if (!chkMercuryPresent.Checked)
+            {
+                radMercury10MHz.Checked = false;
+                radMercury12288MHz.Checked = false;
+                radMercury10MHz.Enabled = false;
+                radMercury12288MHz.Enabled = false;
+
+                bits &= 0xbf;  // 1011 1111
+            }
+            else
+            {
+                radMercury10MHz.Enabled = true;
+                radMercury12288MHz.Enabled = true;
+
+                bits |= 0x40;   // 0100 0000
+                NetworkIO.SetMercTxAtten(Convert.ToInt32(chkATTOnTX.Checked));
+            }
+            NetworkIO.SetC1Bits(bits);
+            checkHPSDRDefaults(sender, e);
+            console.MercuryPresent = chkMercuryPresent.Checked;
+            NetworkIO.fwVersionsChecked = false;
         }
 
         private void chkAlexPresent_CheckedChanged(object sender, System.EventArgs e)
@@ -12274,6 +12419,121 @@ namespace Thetis
             console.SetComboPreampForHPSDR();
 
             udHermesStepAttenuatorData_ValueChanged(this, EventArgs.Empty);
+        }
+
+        private void chkExcaliburPresent_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (chkExcaliburPresent.Checked)
+            {
+                radAtlas10MHz.Checked = true;
+                groupBox10MhzClock.Enabled = false;
+            }
+            else
+            {
+                groupBox10MhzClock.Enabled = true;
+            }
+        }
+
+        private void radAtlas10MHz_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (radAtlas10MHz.Checked)
+            {
+                int bits = NetworkIO.GetC1Bits();
+                radMercury10MHz.Checked = false;
+                radPenny10MHz.Checked = false;
+                bits &= 0xf3;  // 1111 0011
+                NetworkIO.SetC1Bits(bits);
+            }
+        }
+
+        private void radMercury10MHz_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (radMercury10MHz.Checked)
+            {
+                int bits = NetworkIO.GetC1Bits();
+                radAtlas10MHz.Checked = false;
+                radPenny10MHz.Checked = false;
+                bits &= 0xf3;  // 1111 0011
+                bits |= 0x8;  // 0000 1000
+                NetworkIO.SetC1Bits(bits);
+            }
+        }
+
+        private void radPenny10MHz_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (radPenny10MHz.Checked)
+            {
+                int bits = NetworkIO.GetC1Bits();
+                radAtlas10MHz.Checked = false;
+                radMercury10MHz.Checked = false;
+                bits &= 0xf3;  // 1111 0011
+                bits |= 0x4;  // 0000 0100
+                NetworkIO.SetC1Bits(bits);
+            }
+        }
+
+        private void rad12288MHzPenny_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (rad12288MHzPenny.Checked)
+            {
+                int bits = NetworkIO.GetC1Bits();
+                radMercury12288MHz.Checked = false;
+
+                bits &= 0xef;  // 1110 1111				
+                NetworkIO.SetC1Bits(bits);
+            }
+        }
+
+        private void radMercury12288MHz_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (radMercury12288MHz.Checked)
+            {
+                int bits = NetworkIO.GetC1Bits();
+                rad12288MHzPenny.Checked = false;
+
+                bits |= 0x10;  // 0001 0000				
+                NetworkIO.SetC1Bits(bits);
+            }
+        }
+
+        private void radPennyMic_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (radPennyMic.Checked)
+            {
+                int bits = NetworkIO.GetC1Bits();
+                radJanusMic.Checked = false;
+
+                bits |= 0x80;  // 1000 0000				
+                NetworkIO.SetC1Bits(bits);
+            }
+        }
+
+        private void radJanusMic_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (radJanusMic.Checked)
+            {
+                int bits = NetworkIO.GetC1Bits();
+                radPennyMic.Checked = false;
+
+                bits &= 0x7f;  // 0111 1111
+                NetworkIO.SetC1Bits(bits);
+            }
+        }
+
+        private void chkJanusPresent_CheckedChanged(object sender, System.EventArgs e)
+        {
+            if (chkJanusPresent.Checked)
+            {
+                radJanusMic.Enabled = true;
+            }
+            else
+            {
+                radJanusMic.Checked = false;
+                radJanusMic.Enabled = false;
+            }
+            checkHPSDRDefaults(sender, e);
+            // TODO: VU2JXN - add support for this in console or in network.h
+            // console.JanusPresent = chkJanusPresent.Checked;
         }
 
         public byte BandBBitMask = 0x70; // 4x3 split
@@ -19089,6 +19349,8 @@ namespace Thetis
         {
             switch (sModel.ToUpper())
             {
+                case "HPSDR":
+                    return HPSDRModel.HPSDR;
                 case "HERMES":
                     return HPSDRModel.HERMES;
                 case "ANAN-10":
@@ -19132,6 +19394,51 @@ namespace Thetis
 
             switch (stringModelToEnum(comboRadioModel.Text))
             {
+                case HPSDRModel.HPSDR:
+                    console.CurrentHPSDRModel = HPSDRModel.HPSDR;
+                    chkPennyPresent.Visible = true;
+                    chkPennyPresent.Enabled = true;
+                    chkMercuryPresent.Visible = true;
+                    chkMercuryPresent.Enabled = true;
+                    chkPennyLane.Visible = true;	
+                    chkPennyLane.Enabled = true;
+                    chkAlexPresent.Enabled = true;
+		            chkAlexPresent.Visible = true;
+                    chkApolloPresent.Enabled = false;
+                    chkApolloPresent.Visible = false;
+		            chkExcaliburPresent.Enabled = true;
+		            chkExcaliburPresent.Visible = true;
+                    chkGeneralRXOnly.Visible = true;
+  	                groupBox10MhzClock.Visible = true;
+		            groupBoxMicSource.Visible = true;
+		            groupBox122MHz.Visible = true;
+                    chkHermesStepAttenuator.Enabled = false;
+                    udHermesStepAttenuatorData.Enabled = false;
+                    chkRX2StepAtt.Checked = false;
+                    chkRX2StepAtt.Enabled = false;
+                    udHermesStepAttenuatorDataRX2.Enabled = false;
+                    groupBoxRXOptions.Text = "HPSDR Options";
+                    grpMetisAddr.Text = "HPSDR Address";
+                    tpAlexControl.Text = "ALEX"; // set to this in Init Routine line 5862
+		            chkAlexPresent_CheckedChanged(this, EventArgs.Empty);
+                    chkAlexAntCtrl_CheckedChanged(this, EventArgs.Empty);
+		            chkAutoPACalibrate.Checked = false;
+                    chkAutoPACalibrate.Visible = false;
+                    labelRXAntControl.Text = "  RX1   RX2    XVTR";
+                    RXAntChk1Name = "RX1";
+                    RXAntChk2Name = "RX2";
+                    RXAntChk3Name = "XVTR";
+                    labelATTOnTX.Visible = true;
+                    udATTOnTX.Visible = true;
+                    chkRxOutOnTx.Text = "RX 1 OUT on Tx";
+                    chkEXT1OutOnTx.Text = "RX 2 IN on Tx";
+                    chkEXT2OutOnTx.Text = "RX 1 IN on Tx";
+                    chkEXT2OutOnTx.Visible = true;
+                    groupBoxHPSDRHW.Visible = true;
+                    chkDisableRXOut.Visible = false;
+                    chkBPF2Gnd.Visible = false;
+                    break;
+                
                 case HPSDRModel.HERMES:
                     console.CurrentHPSDRModel = HPSDRModel.HERMES;
                     chkAlexPresent.Enabled = true;
@@ -19726,6 +20033,7 @@ namespace Thetis
 
             switch (console.CurrentHPSDRModel)
             {
+                case HPSDRModel.HPSDR:
                 case HPSDRModel.HERMES:
                 case HPSDRModel.ANAN10:
                 case HPSDRModel.ANAN10E:

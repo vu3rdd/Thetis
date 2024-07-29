@@ -1395,6 +1395,19 @@
             this.chkMercDither = new System.Windows.Forms.CheckBoxTS();
             this.grpAudioSampleRate1 = new System.Windows.Forms.GroupBoxTS();
             this.comboAudioSampleRate1 = new System.Windows.Forms.ComboBoxTS();
+            // support HPSDR controls
+            this.groupBoxMicSource = new System.Windows.Forms.GroupBoxTS();
+            this.radPennyMic = new System.Windows.Forms.RadioButtonTS();
+            this.radJanusMic = new System.Windows.Forms.RadioButtonTS();
+            this.groupBox122MHz = new System.Windows.Forms.GroupBoxTS();
+            this.label1 = new System.Windows.Forms.Label();
+            this.radMercury12288MHz = new System.Windows.Forms.RadioButtonTS();
+            this.rad12288MHzPenny = new System.Windows.Forms.RadioButtonTS();
+            this.groupBox10MhzClock = new System.Windows.Forms.GroupBoxTS();
+            this.radPenny10MHz = new System.Windows.Forms.RadioButtonTS();
+            this.radMercury10MHz = new System.Windows.Forms.RadioButtonTS();
+            this.radAtlas10MHz = new System.Windows.Forms.RadioButtonTS();
+            // end of HPSDR controls
             this.tpAlexControl = new System.Windows.Forms.TabPage();
             this.tcAlexControl = new System.Windows.Forms.TabControl();
             this.tpAlexFilterControl = new System.Windows.Forms.TabPage();
@@ -4004,6 +4017,9 @@
             this.groupBoxRXOptions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.udMaxFreq)).BeginInit();
             this.grpAudioSampleRate1.SuspendLayout();
+            this.groupBoxMicSource.SuspendLayout();
+            this.groupBox122MHz.SuspendLayout();
+            this.groupBox10MhzClock.SuspendLayout();
             this.tpAlexControl.SuspendLayout();
             this.tcAlexControl.SuspendLayout();
             this.tpAlexFilterControl.SuspendLayout();
@@ -8176,6 +8192,7 @@
             this.comboRadioModel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.comboRadioModel.FormattingEnabled = true;
             this.comboRadioModel.Items.AddRange(new object[] {
+            "HPSDR"
             "HERMES",
             "ANAN-10",
             "ANAN-10E",
@@ -8256,10 +8273,12 @@
             this.lblMetisMAC.Text = "00:00:00:00:00:00";
             // 
             // groupBoxHPSDRHW
-            // 
+            //
             this.groupBoxHPSDRHW.Controls.Add(this.chkApolloPresent);
             this.groupBoxHPSDRHW.Controls.Add(this.chkPennyLane);
+            this.groupBoxHPSDRHW.Controls.Add(this.chkExcaliburPresent);
             this.groupBoxHPSDRHW.Controls.Add(this.chkAlexPresent);
+            this.groupBoxHPSDRHW.Controls.Add(this.chkJanusPresent);
             this.groupBoxHPSDRHW.Controls.Add(this.chkMercuryPresent);
             this.groupBoxHPSDRHW.Controls.Add(this.chkPennyPresent);
             this.groupBoxHPSDRHW.Location = new System.Drawing.Point(208, 8);
@@ -22464,6 +22483,9 @@
             this.tpHPSDR.Controls.Add(this.grpVersion);
             this.tpHPSDR.Controls.Add(this.groupBoxRXOptions);
             this.tpHPSDR.Controls.Add(this.grpAudioSampleRate1);
+            this.tpHPSDR.Controls.Add(this.groupBoxMicSource);
+            this.tpHPSDR.Controls.Add(this.groupBox122MHz);
+            this.tpHPSDR.Controls.Add(this.groupBox10MhzClock);
             this.tpHPSDR.Location = new System.Drawing.Point(4, 22);
             this.tpHPSDR.Name = "tpHPSDR";
             this.tpHPSDR.Padding = new System.Windows.Forms.Padding(3);
@@ -22877,6 +22899,146 @@
             this.toolTip1.SetToolTip(this.comboAudioSampleRate1, "Sample Rate -- Higher sampling rates yield a wider panadapter and less latency at" +
         " a cost of CPU% and filter sharpness");
             this.comboAudioSampleRate1.SelectedIndexChanged += new System.EventHandler(this.comboAudioSampleRate1_SelectedIndexChanged);
+
+                        // 
+            // groupBoxMicSource
+            // 
+            this.groupBoxMicSource.Controls.Add(this.radPennyMic);
+            this.groupBoxMicSource.Controls.Add(this.radJanusMic);
+            this.groupBoxMicSource.Location = new System.Drawing.Point(8, 288);
+            this.groupBoxMicSource.Name = "groupBoxMicSource";
+            this.groupBoxMicSource.Size = new System.Drawing.Size(264, 48);
+            this.groupBoxMicSource.TabIndex = 2;
+            this.groupBoxMicSource.TabStop = false;
+            this.groupBoxMicSource.Text = "Mic Source";
+            // 
+            // radPennyMic
+            // 
+            this.radPennyMic.Enabled = false;
+            this.radPennyMic.Image = null;
+            this.radPennyMic.Location = new System.Drawing.Point(96, 16);
+            this.radPennyMic.Name = "radPennyMic";
+            this.radPennyMic.Size = new System.Drawing.Size(100, 24);
+            this.radPennyMic.TabIndex = 1;
+            this.radPennyMic.TabStop = true;
+            this.radPennyMic.Text = "Penny[Lane]";
+            this.radPennyMic.UseVisualStyleBackColor = true;
+            this.radPennyMic.CheckedChanged += new System.EventHandler(this.radPennyMic_CheckedChanged);
+            // 
+            // radJanusMic
+            // 
+            this.radJanusMic.Enabled = false;
+            this.radJanusMic.Image = null;
+            this.radJanusMic.Location = new System.Drawing.Point(8, 16);
+            this.radJanusMic.Name = "radJanusMic";
+            this.radJanusMic.Size = new System.Drawing.Size(55, 24);
+            this.radJanusMic.TabIndex = 0;
+            this.radJanusMic.TabStop = true;
+            this.radJanusMic.Text = "Janus";
+            this.radJanusMic.UseVisualStyleBackColor = true;
+            this.radJanusMic.CheckedChanged += new System.EventHandler(this.radJanusMic_CheckedChanged);
+            // 
+            // groupBox122MHz
+            // 
+            this.groupBox122MHz.Controls.Add(this.radMercury12288MHz);
+            this.groupBox122MHz.Controls.Add(this.rad12288MHzPenny);
+            this.groupBox122MHz.Location = new System.Drawing.Point(8, 212);
+            this.groupBox122MHz.Name = "groupBox122MHz";
+            this.groupBox122MHz.Size = new System.Drawing.Size(264, 51);
+            this.groupBox122MHz.TabIndex = 1;
+            this.groupBox122MHz.TabStop = false;
+            this.groupBox122MHz.Text = "122.88 MHz Clock Source";
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F);
+            this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.label1.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.label1.Location = new System.Drawing.Point(224, 14);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(48, 12);
+            this.label1.TabIndex = 132;
+            this.label1.Text = "± Shift";
+            // 
+            // radMercury12288MHz
+            // 
+            this.radMercury12288MHz.Enabled = false;
+            this.radMercury12288MHz.Image = null;
+            this.radMercury12288MHz.Location = new System.Drawing.Point(136, 16);
+            this.radMercury12288MHz.Name = "radMercury12288MHz";
+            this.radMercury12288MHz.Size = new System.Drawing.Size(88, 24);
+            this.radMercury12288MHz.TabIndex = 1;
+            this.radMercury12288MHz.TabStop = true;
+            this.radMercury12288MHz.Text = "Mercury";
+            this.radMercury12288MHz.UseVisualStyleBackColor = true;
+            this.radMercury12288MHz.CheckedChanged += new System.EventHandler(this.radMercury12288MHz_CheckedChanged);
+            // 
+            // rad12288MHzPenny
+            // 
+            this.rad12288MHzPenny.Enabled = false;
+            this.rad12288MHzPenny.Image = null;
+            this.rad12288MHzPenny.Location = new System.Drawing.Point(16, 16);
+            this.rad12288MHzPenny.Name = "rad12288MHzPenny";
+            this.rad12288MHzPenny.Size = new System.Drawing.Size(88, 24);
+            this.rad12288MHzPenny.TabIndex = 0;
+            this.rad12288MHzPenny.TabStop = true;
+            this.rad12288MHzPenny.Text = "Penny[Lane]";
+            this.rad12288MHzPenny.UseVisualStyleBackColor = true;
+            this.rad12288MHzPenny.CheckedChanged += new System.EventHandler(this.rad12288MHzPenny_CheckedChanged);
+            // 
+            // groupBox10MhzClock
+            // 
+            this.groupBox10MhzClock.Controls.Add(this.radPenny10MHz);
+            this.groupBox10MhzClock.Controls.Add(this.radMercury10MHz);
+            this.groupBox10MhzClock.Controls.Add(this.radAtlas10MHz);
+            this.groupBox10MhzClock.Location = new System.Drawing.Point(8, 138);
+            this.groupBox10MhzClock.Name = "groupBox10MhzClock";
+            this.groupBox10MhzClock.Size = new System.Drawing.Size(264, 48);
+            this.groupBox10MhzClock.TabIndex = 0;
+            this.groupBox10MhzClock.TabStop = false;
+            this.groupBox10MhzClock.Text = "10 MHz Clock Source";
+            // 
+            // radPenny10MHz
+            // 
+            this.radPenny10MHz.AutoSize = true;
+            this.radPenny10MHz.Enabled = false;
+            this.radPenny10MHz.Image = null;
+            this.radPenny10MHz.Location = new System.Drawing.Point(167, 20);
+            this.radPenny10MHz.Name = "radPenny10MHz";
+            this.radPenny10MHz.Size = new System.Drawing.Size(85, 17);
+            this.radPenny10MHz.TabIndex = 2;
+            this.radPenny10MHz.TabStop = true;
+            this.radPenny10MHz.Text = "Penny[Lane]";
+            this.radPenny10MHz.UseVisualStyleBackColor = true;
+            this.radPenny10MHz.CheckedChanged += new System.EventHandler(this.radPenny10MHz_CheckedChanged);
+            // 
+            // radMercury10MHz
+            // 
+            this.radMercury10MHz.AutoSize = true;
+            this.radMercury10MHz.Enabled = false;
+            this.radMercury10MHz.Image = null;
+            this.radMercury10MHz.Location = new System.Drawing.Point(84, 20);
+            this.radMercury10MHz.Name = "radMercury10MHz";
+            this.radMercury10MHz.Size = new System.Drawing.Size(63, 17);
+            this.radMercury10MHz.TabIndex = 1;
+            this.radMercury10MHz.TabStop = true;
+            this.radMercury10MHz.Text = "Mercury";
+            this.radMercury10MHz.UseVisualStyleBackColor = true;
+            this.radMercury10MHz.CheckedChanged += new System.EventHandler(this.radMercury10MHz_CheckedChanged);
+            // 
+            // radAtlas10MHz
+            // 
+            this.radAtlas10MHz.AutoSize = true;
+            this.radAtlas10MHz.Image = null;
+            this.radAtlas10MHz.Location = new System.Drawing.Point(15, 20);
+            this.radAtlas10MHz.Name = "radAtlas10MHz";
+            this.radAtlas10MHz.Size = new System.Drawing.Size(48, 17);
+            this.radAtlas10MHz.TabIndex = 0;
+            this.radAtlas10MHz.TabStop = true;
+            this.radAtlas10MHz.Text = "Atlas";
+            this.radAtlas10MHz.UseVisualStyleBackColor = true;
+            this.radAtlas10MHz.CheckedChanged += new System.EventHandler(this.radAtlas10MHz_CheckedChanged);
+
             // 
             // tpAlexControl
             // 
@@ -60853,6 +61015,10 @@
             this.groupBoxRXOptions.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.udMaxFreq)).EndInit();
             this.grpAudioSampleRate1.ResumeLayout(false);
+            this.groupBoxMicSource.ResumeLayout(false);
+            this.groupBox122MHz.ResumeLayout(false);
+            this.groupBox10MhzClock.ResumeLayout(false);
+            this.groupBox10MhzClock.PerformLayout();
             this.tpAlexControl.ResumeLayout(false);
             this.tcAlexControl.ResumeLayout(false);
             this.tpAlexFilterControl.ResumeLayout(false);
@@ -62195,6 +62361,7 @@
         private SaveFileDialog saveFileDialog1;
         private CheckBoxTS chkAlexPresent;
         private CheckBoxTS chkPennyPresent;
+        private CheckBoxTS chkPennyLane;
         private CheckBoxTS chkMercuryPresent;
         private GroupBoxTS grpHPSDRFreqCalDbg;
         private LabelTS labelTS10;
@@ -62405,6 +62572,16 @@
         private GroupBoxTS groupBoxRXOptions;
         private CheckBoxTS chkMercRandom;
         private CheckBoxTS chkMercDither;
+        private GroupBoxTS groupBoxMicSource;
+        private RadioButtonTS radPennyMic;
+        private RadioButtonTS radJanusMic;
+        private RadioButtonTS radPenny10MHz;
+        private RadioButtonTS radMercury10MHz;
+        private RadioButtonTS radAtlas10MHz;
+        private GroupBoxTS groupBox122MHz;
+        private GroupBoxTS groupBox10MhzClock;
+        private RadioButtonTS radMercury12288MHz;
+        private RadioButtonTS rad12288MHzPenny;
         private NumericUpDownTS udMaxFreq;
         private LabelTS labelTS57;
         private GroupBoxTS grpVersion;

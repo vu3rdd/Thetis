@@ -7789,6 +7789,7 @@ namespace Thetis
                         Rate[3] = rx2_rate;
                     }
                     break;
+                case HPSDRModel.HPSDR:
                 case HPSDRModel.HERMES:
                 case HPSDRModel.ANAN10:
                 case HPSDRModel.ANAN100:
@@ -8010,7 +8011,7 @@ namespace Thetis
                                 break;
                         }
                         break;
-                    //case HPSDRHW.Atlas: /// ???
+                    case HPSDRHW.Atlas: /// ???
                     case HPSDRHW.Hermes: // ANAN-10 ANAN-100 Heremes
                     case HPSDRHW.HermesII: // ANAN-10E ANAN-100B HeremesII
                         switch (tot)
@@ -8103,7 +8104,7 @@ namespace Thetis
                                 break;
                         }
                         break;
-                    //                    case HPSDRHW.Atlas: /// ???
+                    case HPSDRHW.Atlas: /// Atlas based h/w
                     case HPSDRHW.Hermes: // ANAN-10 ANAN-100 Heremes (4 adc)
                         switch (tot)
                         {
@@ -14396,6 +14397,16 @@ namespace Thetis
 
                 switch (current_hpsdr_model)
                 {
+                    case HPSDRModel.HPSDR:
+                        chkDX.Checked = false;
+                        chkDX.Visible = false;
+                        rx2_preamp_present = false;
+                        NetworkIO.SetRxADC(1);
+                        NetworkIO.SetMKIIBPF(0);
+                        cmaster.SetADCSupply(0, 33);
+                        NetworkIO.LRAudioSwap(1);
+                        CurrentHPSDRHardware = HPSDRHW.Atlas;
+                        break;
                     case HPSDRModel.HERMES:
                         chkDX.Checked = false;
                         chkDX.Visible = false;
@@ -14526,7 +14537,6 @@ namespace Thetis
                 switch (current_hpsdr_model)
                 {
                     case HPSDRModel.HPSDR:
-                        break;
                     case HPSDRModel.HERMES:
                     case HPSDRModel.ANAN10:
                     case HPSDRModel.ANAN10E:
@@ -14993,6 +15003,7 @@ namespace Thetis
 
             switch (CurrentHPSDRModel)
             {
+                case HPSDRModel.HPSDR:
                 case HPSDRModel.HERMES:
                 case HPSDRModel.ANAN10:
                 case HPSDRModel.ANAN10E:
@@ -15027,6 +15038,7 @@ namespace Thetis
 
             switch (CurrentHPSDRModel)
             {
+                case HPSDRModel.HPSDR:
                 case HPSDRModel.HERMES:
                 case HPSDRModel.ANAN10:
                 case HPSDRModel.ANAN10E:
@@ -26822,6 +26834,7 @@ namespace Thetis
                     switch (current_hpsdr_model)
                     {
                         // 2-DDC Models
+                        case HPSDRModel.HPSDR:
                         case HPSDRModel.ANAN10E:
                         case HPSDRModel.ANAN100B:
                             cmaster.SetAAudioMixStates((void*)0, 0, RX1 + RX1S + RX2 + MON, RX1 + RX1S + RX2 + MON);
@@ -26845,6 +26858,7 @@ namespace Thetis
                     switch (current_hpsdr_model)
                     {
                         // 2-DDC Models
+                        case HPSDRModel.HPSDR:
                         case HPSDRModel.HERMES:
                         case HPSDRModel.ANAN10E:
                         case HPSDRModel.ANAN10:
@@ -31221,7 +31235,8 @@ namespace Thetis
                 }
 
                 if (_mox && (CurrentHPSDRHardware == HPSDRHW.Hermes ||
-                            CurrentHPSDRHardware == HPSDRHW.HermesII))
+                            CurrentHPSDRHardware == HPSDRHW.HermesII
+                            CurrentHPSDRHardware == HPSDRHW.Atlas))
                 {
                     if (chkVFOSplit.Checked)
                     {
@@ -31252,7 +31267,8 @@ namespace Thetis
                 if (_mox)
                 {
                     if (CurrentHPSDRHardware == HPSDRHW.Hermes ||
-                         CurrentHPSDRHardware == HPSDRHW.HermesII)
+                         CurrentHPSDRHardware == HPSDRHW.HermesII ||
+                         CurrentHPSDRHardware == HPSDRHW.Atlas)
                     {
                         if (chkVFOSplit.Checked)
                         {
